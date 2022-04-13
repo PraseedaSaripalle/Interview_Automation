@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <title>Autocomplete</title>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
+    <script>
+         $(function () {
+            $("#topic").autocomplete({
+            source:"{% url 'topic' %}" });
+            document.getElementById("card-body").style.visibility="hidden";
+        });
+    
+        function SubmitTopic () {
+            //alert("insude submit");
+            let topicname=document.getElementById("topic").value;
+            $.ajax({
+                type:"GET",
+                url: "{% url 'tsubquestemp' %}",
+                data: {
+                    'topicname': topicname
+                },
+                
+                dataType: 'json',
+                success: function (data) {
+                    //alert('The data has been created successfully!');
+                    $(".card-body").html(data);
+                    document.getElementById("card-body").style.visibility="visible";
+                    document.getElementById("topic").style.visibility="hidden";
+                    document.getElementById("submitbutton").style.visibility="hidden";
+                    document.getElementById("product").style.visibility="hidden";
+                }
+            });
+        };
+    </script>
+<form >
+    <label for="product" id ="product">Topic</label>
+    <input type="text" name="topic" id="topic">
+    <button type="button" id="submitbutton" onclick="SubmitTopic()">Submit</button>
+    
+    
+</form>
+<div class="card-body" id="card-body">
+<h2>List of all Sub Topics Summary </h2>
+<table style="width: 100%;">
+    <table>
+      {% if topics %}
+      <tr>
+          <th>Topic Id</th>
+          <th>Topic name</th>
+     
+      </tr>
+      <tr>
+          {% for t in topics %}
+          <td>{{t.id}}</td>
+          <td><a href="{% url 'questions' topic_name=t.topic_name %}">{{t.topic_name}} </a></td>
+      </tr>
+          {% endfor %}
+     </table>
+      {% else %}
+          <h1>No Data</h1>
+      {% endif %} 
+</table>
+</div>
+</body>
+</html>

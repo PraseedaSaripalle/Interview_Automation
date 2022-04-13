@@ -1,0 +1,110 @@
+<html>
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+<body>
+	<script type="text/javascript">
+		//var qid;
+		//document.getElementById("quid").value="{{qid}}";
+	   //alert("inside script!");
+		var synth = window.speechSynthesis;
+		var randomques = "{{questiontext}}";
+		//alert(randomques);
+		//console.log(randomques);
+		
+		function speak(questiontext){
+			//alert("inside speak!");
+			console.log("Entered into speech",questiontext);
+			if (synth.speaking) {
+				console.error('speechSynthesis.speaking');
+				return;
+			}
+			if (randomques !== '') {
+				var utterThis = new SpeechSynthesisUtterance(questiontext);
+				utterThis.onend = function (event) {
+				console.log('SpeechSynthesisUtterance.onend');
+				}
+				utterThis.onerror = function (event) {
+				console.error('SpeechSynthesisUtterance.onerror');
+				}
+			}
+			console.log(utterThis);
+			synth.speak(utterThis);
+		}
+	</script>
+<h1 class="notranslate">Hello User! This is your question</h1>
+<h2>List of all Topic Specific Questions </h2>
+
+
+
+<table style="width: 100%;">
+
+    <table>
+        {% if questiontext %}
+        <tr>
+            <th>Questions Id</th>
+            <th>Questions name</th>
+   
+        </tr>
+    	<tr>
+        	<td>{{qid}}</td>
+        	<td>{{questiontext}}</td>
+    	</tr>
+   	</table>
+		{% else %}
+ 			<h1>No Data</h1>
+		{% endif %}
+
+<div id="google_translate_element"></div>
+<button type="button" id="submitbutton" onclick = "speak('{{questiontext}}')">Play</button>
+
+<h2> Answer this question</h2>
+<p><button type="button" onclick="runSpeechRecognition()">Speak Out!!</button> &nbsp; <span id="action"></span></p>
+<div id="output" class="hide"></div>
+
+<form action="/results/" method="post">
+	{% csrf_token %}
+	<input type="hidden" name="transcript" id="transcript">
+	<input type="hidden" name="quid" id="quid" value="{{qid}}">
+	<button type="submit">Verify your results</button>
+	
+</form>
+
+<script>
+	/* JS comes here */
+	function runSpeechRecognition() {
+	var output = document.getElementById("output");
+	// get action element reference
+	var action = document.getElementById("action");
+	// new speech recognition object
+	var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+	var recognition = new SpeechRecognition();
+
+	// This runs when the speech recognition service starts
+	recognition.onstart = function() {
+		action.innerHTML = "<small>stopped listening, hope you are done...</small>";
+		recognition.stop();
+	}
+  
+	// This runs when the speech recognition service returns result
+	recognition.onresult = function(event) {
+		var transcript = event.results[0][0].transcript;
+	   
+		output.innerHTML = "<b>Text:</b> " + transcript ;
+		document.getElementById("transcript").value=transcript;
+		alert(transcript);
+		//alert(qid);
+		output.classList.remove("hide");
+	};
+  
+	 // start recognition
+	 recognition.start();
+}
+
+
+</script>
+
+</body>
+</html>

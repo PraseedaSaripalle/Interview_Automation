@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+    <h1><u>Results Page</u></h1>
+</head>
+<body>
+    {% if submitted %}
+        {% if null_value %}
+            <h1> Your answer doesnt seem to match with any of our answers.</h1>
+            <h1> You seem to done poorly</h1>
+            <h1> However, do check out our model answer here: {{excellent_answer}}<br> </h1>
+        {% else %}
+            <h1>
+                <p> Your response similarity check is : {{closest_result}} </p>
+                <p><i>The answer that matches the best with your answer is: </i><br> {{user_closest_answer}}</p>
+                <p> <i>Your response grade that matches the most with our answer is </i> <br>{{grade}}</p>
+                <p> <i>Do check out the model answer</i><br><br> {{excellent_answer}} <br></p><br>
+        {% endif %}
+            </h1>
+    {% else %}
+        <h1>No Data</h1>
+    {% endif %}
+</body>
+</html>
