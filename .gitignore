@@ -1,0 +1,11 @@
+venv/
+dist.tar
+.DS_Store
+.py[co]
+local.py
+.idea/
+.vscode/
+secure/
+static/
+staticfiles/
+debug/

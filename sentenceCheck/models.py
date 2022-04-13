@@ -1,7 +1,7 @@
 from django.db import models
 class Topic(models.Model):
     topic_name=models.CharField(max_length=200)
-    children=models.ManyToManyField("self",blank=True, null=True,symmetrical=False,related_name="parents")
+    children=models.ManyToManyField("self", blank=True, symmetrical=False,related_name="parents")
     def __str__(self):
         return "%s" % (self.topic_name)
 
