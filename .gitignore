@@ -9,3 +9,4 @@ secure/
 static/
 staticfiles/
 debug/
+__pycache__/

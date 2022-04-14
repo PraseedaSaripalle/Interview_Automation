@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import m2m_changed, pre_save, post_save
+from django.db.models.signals import m2m_changed, pre_save, post_save, post_delete, pre_delete
 from django.dispatch import receiver
 
 from django.core.exceptions import ValidationError
@@ -102,6 +102,12 @@ def recursive_update(sender, instance, created, **kwargs):
     if hasattr(instance, '__CHANGED__'):
         del instance.__CHANGED__
         recursive_subtopic_update(instance)
+
+@receiver(pre_delete, sender=Topic)
+def update_before_delete(sender, instance, **kwargs):
+    # All the children become orphans or we remove all the children
+    for t in instance.children.all():
+        instance.children.remove(t)
 
 
 @receiver(m2m_changed, sender=Topic.children.through)
