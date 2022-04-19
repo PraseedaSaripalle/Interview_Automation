@@ -41,6 +41,7 @@ def read_excel(path,sheet_value):
             #strip is going to remove the unwanted spaces before and after the word.
             print("subtopiccolumn",subtopiccolumn)
             tlist=Topic.objects.filter(topic__iexact=subtopiccolumn)
+            #check if the topic name matches to list of topics already entered
             nooftopics=tlist.count()
             print("nosubtopics",nooftopics)
             
